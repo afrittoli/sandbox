@@ -1,4 +1,4 @@
-name: GHStack - land
+name: Slash Command Routing
 on:
   issue_comment:
     types: [created]
@@ -7,7 +7,7 @@ jobs:
   check_comments:
     runs-on: ubuntu-latest
     steps:
-    - name: land
+    - name: route-land
       uses: peter-evans/slash-command-dispatch@v3
       with:
         token: ${{ secrets.LAND_TOKEN }}
