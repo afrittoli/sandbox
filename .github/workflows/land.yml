@@ -10,8 +10,8 @@ jobs:
     - name: land
       uses: peter-evans/slash-command-dispatch@v3
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        reaction-token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.LAND_TOKEN }}
+        reaction-token: ${{ secrets.LAND_TOKEN }}
         issue-type: pull-request
         permission: write
         commands: |
