@@ -30,5 +30,6 @@ jobs:
           "/repos/${{ github.repository }}/issues/${ISSUE_NUMBER}/assignees" \
           -f "assignees[]=${ASSIGNEE}"
       env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         ISSUE_NUMBER: ${{ github.event.client_payload.github.event.issue.number }}
         ASSIGNEE: ${{ github.event.client_payload.github.actor }}
