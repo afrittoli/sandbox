@@ -22,7 +22,7 @@ jobs:
     - name: route-assigntome
       uses: peter-evans/slash-command-dispatch@v3
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.LAND_TOKEN }}
         reaction-token: ${{ secrets.GITHUB_TOKEN }}
         issue-type: issue
         permission: none
