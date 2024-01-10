@@ -12,19 +12,22 @@ jobs:
       with:
         token: ${{ secrets.LAND_TOKEN }}
         reaction-token: ${{ secrets.LAND_TOKEN }}
-        issue-type: pull-request
-        permission: write
-        commands: |
-          land
-  check_comments_from_anyone:
-    runs-on: ubuntu-latest
-    steps:
-    - name: route-assigntome
-      uses: peter-evans/slash-command-dispatch@v3
-      with:
-        token: ${{ secrets.LAND_TOKEN }}
-        reaction-token: ${{ secrets.GITHUB_TOKEN }}
-        issue-type: issue
-        permission: none
-        commands: |
-          assigntome
+        config: >
+          [
+            {
+              "command": "land",
+              "permission": "write",
+              "issue_type": "pull-request",
+              "repository": "afrittoli/sandbox"
+            },
+            {
+              "command": "assigntome",
+              "permission": "none",
+              "issue_type": "issue",
+              "repository": "afrittoli/sandbox",
+              "static_args": [
+                "production",
+                "region=us-east-1"
+              ]
+            }
+          ]
