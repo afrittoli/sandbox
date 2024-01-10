@@ -19,6 +19,8 @@ jobs:
       run: |
         git config --global user.email "andrea.frittoli@gmail.com"
         git config --global user.name "Andrea Frittoli"
+        echo $ISSUE_NUMBER
+        echo $ASSIGNEE
         gh api \
           --method POST \
           -H "Accept: application/vnd.github+json" \
