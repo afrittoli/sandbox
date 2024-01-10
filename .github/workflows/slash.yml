@@ -22,12 +22,8 @@ jobs:
             },
             {
               "command": "assigntome",
-              "permission": "none",
+              "permission": "write",
               "issue_type": "issue",
               "repository": "afrittoli/sandbox",
-              "static_args": [
-                "production",
-                "region=us-east-1"
-              ]
             }
           ]
