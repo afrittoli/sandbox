@@ -22,7 +22,7 @@ jobs:
             },
             {
               "command": "assigntome",
-              "permission": "write",
+              "permission": "none",
               "issue_type": "issue",
               "repository": "afrittoli/sandbox"
             }
