@@ -27,7 +27,7 @@ jobs:
           -f "assignees[]=${ASSIGNEE}"
       env:
         GITHUB_TOKEN: ${{ secrets.LAND_TOKEN }}
-        ISSUE_NUMBER: ${{ github.event.client_payload.github.payload.issue.number }}
+        ISSUE_NUMBER: ${{ github.event.client_payload.github.payload.issue.numberabc }}
         ASSIGNEE: ${{ github.event.client_payload.github.actor }}
 
     - name: Create URL to the run output
