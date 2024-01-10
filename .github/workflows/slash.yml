@@ -24,6 +24,6 @@ jobs:
               "command": "assigntome",
               "permission": "write",
               "issue_type": "issue",
-              "repository": "afrittoli/sandbox",
+              "repository": "afrittoli/sandbox"
             }
           ]
