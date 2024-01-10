@@ -19,8 +19,6 @@ jobs:
       run: |
         git config --global user.email "andrea.frittoli@gmail.com"
         git config --global user.name "Andrea Frittoli"
-        echo $ISSUE_NUMBER
-        echo $ASSIGNEE
         gh api \
           --method POST \
           -H "Accept: application/vnd.github+json" \
@@ -28,6 +26,23 @@ jobs:
           "/repos/${{ github.repository }}/issues/${ISSUE_NUMBER}/assignees" \
           -f "assignees[]=${ASSIGNEE}"
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        ISSUE_NUMBER: ${{ github.event.client_payload.github.payload.comment.issue.number }}
+        GITHUB_TOKEN: ${{ secrets.LAND_TOKEN }}
+        ISSUE_NUMBER: ${{ github.event.client_payload.github.payload.issue.number }}
         ASSIGNEE: ${{ github.event.client_payload.github.actor }}
+
+    - name: Create URL to the run output
+      if: ${{ failure() }}
+      id: vars
+      run: echo "run-url=https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" >> $GITHUB_OUTPUT
+
+    - name: Create comment
+      if: ${{ failure() }}
+      uses: peter-evans/create-or-update-comment@v2
+      with:
+        token: ${{ secrets.LAND_TOKEN }}
+        repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
+        issue-number: ${{ github.event.client_payload.github.payload.issue.number }}
+        body: |
+          [Command run output][1]
+
+          [1]: ${{ steps.vars.outputs.run-url }}
