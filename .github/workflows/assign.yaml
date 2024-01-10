@@ -1,0 +1,35 @@
+name: Assign issue to the commenter
+on:
+  repository_dispatch:
+    types: [assigntome-command]
+
+jobs:
+  assign_issue:
+    name: Assign Issue
+    runs-on: ubuntu-latest
+    steps:
+    - name: Show Environment Variables
+      run: env
+    - name: Show Github Object
+      run: |
+        cat <<'EOF'
+        ${{ toJson(github) }}
+        EOF
+    - name: Assign Issue
+      run: |
+        git config --global user.email "andrea.frittoli@gmail.com"
+        git config --global user.name "Andrea Frittoli"
+        cat <<EOF > ~/.token
+        $GITHUB_TOKEN
+        EOF
+        gh auth login --with-token < ~/.token
+        gh api \
+          --method POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          "/repos/${{ github.repository }}/issues/${ISSUE_NUMBER}/assignees" \
+          -f "assignees[]=${ASSIGNEE}"
+      env:
+        GITHUB_TOKEN: ${{ secrets.LAND_TOKEN }}
+        ISSUE_NUMBER: ${{ github.event.client_payload.slash_command.args.named.issue }}
+        ASSIGNEE: ${{ github.event.client_payload.slash_command.args.named.user }}

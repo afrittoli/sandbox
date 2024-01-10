@@ -16,3 +16,18 @@ jobs:
         permission: write
         commands: |
           land
+  check_comments_from_anyone:
+    runs-on: ubuntu-latest
+    steps:
+    - name: route-land
+      uses: peter-evans/slash-command-dispatch@v3
+      with:
+        token: ${{ secrets.LAND_TOKEN }}
+        reaction-token: ${{ secrets.LAND_TOKEN }}
+        issue-type: issue
+        permission: none
+        commands: |
+          assigntome
+        static-args: |
+          issue=${{ github.event.issue.number }}
+          user=${{ github.actor }}
