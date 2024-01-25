@@ -46,14 +46,7 @@ jobs:
         remote_name = origin
         EOF
 
-        # Fetch the latest origin/main
-        git fetch origin/main
-
         # Rebase the stack
-        # The ability to rebase is checked beforehand, but there is a slight chance that
-        # rebase might still fail here if origin/main moved since it was checked.
-        # When that happens the error will be in the action log and the rebase will be
-        # reported as failed.
         git rebase origin/main
 
         # Update the PRs
