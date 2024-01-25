@@ -50,6 +50,7 @@ jobs:
         git rebase origin/main
 
         # Update the PRs
+        ghstack --version
         ghstack submit
       env:
         GITHUB_TOKEN: ${{ secrets.LAND_TOKEN }}
