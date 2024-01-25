@@ -8,6 +8,4 @@ and a second test on top
 
 Most tests have been cleaned up
 
-Rebase test2 #1
-Rebase test2 #2
-Rebase test2 #3
+Rebase test3 #1

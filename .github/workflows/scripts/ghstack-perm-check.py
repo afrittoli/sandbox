@@ -139,7 +139,7 @@ class GHStackChecks:
             )
             self.must(
                 resp.ok,
-                f"User {actor} must be a maintainer {self.REPO} to rebase someone else's PR",
+                f"User {actor} is not a maintainer of {self.REPO}. Only maintainers may rebase someone else's PR",
             )
             permissions = resp.json()
 
@@ -147,7 +147,7 @@ class GHStackChecks:
             # Reference: https://docs.github.com/en/rest/collaborators/collaborators?apiVersion=2022-11-28#check-if-a-user-is-a-repository-collaborator  # noqa: E501
             self.must(
                 permissions["permission"] in ["write", "admin"],
-                f"User {actor} must be a maintainer {self.REPO} to rebase someone else's PR",
+                f"User {actor} is not a maintainer of {self.REPO}. Only maintainers may rebase someone else's PR",
             )
 
         print(":: All PRs are ready to be rebased!")
