@@ -16,7 +16,7 @@ jobs:
         ${{ toJson(github) }}
         EOF
     - name: Show Github Event Path Json
-      run: 'cat $GITHUB_EVENT_PATH || true'
+      run: 'cat "$GITHUB_EVENT_PATH" || true'
     - uses: actions/checkout@v3
       with:
         token: ${{ secrets.LAND_TOKEN }}

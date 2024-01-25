@@ -13,17 +13,17 @@ import sys
 
 import requests
 
-class GHStackChecks:
 
+class GHStackChecks:
     def __init__(self, token, event):
         self.gh = requests.Session()
         self.gh.headers.update(
-                {
-                    "Authorization": f'Bearer {token}',
-                    "Accept": "application/vnd.github+json",
-                    "X-GitHub-Api-Version": "2022-11-28",
-                }
-            )
+            {
+                "Authorization": f"Bearer {token}",
+                "Accept": "application/vnd.github+json",
+                "X-GitHub-Api-Version": "2022-11-28",
+            }
+        )
         self.event = event
         self.REPO = event["repository"]
         self.PR = event["event"]["client_payload"]["pull_request"]
@@ -51,7 +51,9 @@ class GHStackChecks:
         print(":: Fetching newest main...")
         self.must(os.system("git fetch origin main") == 0, "Can't fetch main")
         print(":: Fetching orig branch...")
-        self.must(os.system(f"git fetch origin {orig_ref}") == 0, "Can't fetch orig branch")
+        self.must(
+            os.system(f"git fetch origin {orig_ref}") == 0, "Can't fetch orig branch"
+        )
 
         proc = subprocess.Popen(
             "git log FETCH_HEAD...$(git merge-base FETCH_HEAD origin/main)",
@@ -66,11 +68,13 @@ class GHStackChecks:
             out.decode("utf-8"),
         )
         pr_numbers = list(map(int, pr_numbers))
-        self.must(pr_numbers and pr_numbers[0] == self.NUMBER, "Extracted PR numbers not seems right!")
+        self.must(
+            pr_numbers and pr_numbers[0] == self.NUMBER,
+            "Extracted PR numbers not seems right!",
+        )
         return pr_numbers
 
     def land(self, pr_numbers):
-
         # Enforce requirements for every PR in the stack
         for n in pr_numbers:
             # Checking Approvals
@@ -79,7 +83,9 @@ class GHStackChecks:
             self.must(resp.ok, "Error Getting PR Object!")
             pr_obj = resp.json()
 
-            resp = self.gh.get(f"https://api.github.com/repos/{self.REPO}/pulls/{self.NUMBER}/reviews")
+            resp = self.gh.get(
+                f"https://api.github.com/repos/{self.REPO}/pulls/{self.NUMBER}/reviews"
+            )
             self.must(resp.ok, "Error Getting PR Reviews!")
             reviews = resp.json()
             idmap = {}
@@ -99,7 +105,9 @@ class GHStackChecks:
             self.must(approved, f"PR #{n} is not approved yet!")
 
             # Checking CI Jobs
-            resp = self.gh.get(f'https://api.github.com/repos/{self.REPO}/commits/{pr_obj["head"]["sha"]}/check-runs')
+            resp = self.gh.get(
+                f'https://api.github.com/repos/{self.REPO}/commits/{pr_obj["head"]["sha"]}/check-runs'
+            )
             self.must(resp.ok, "Error getting check runs status!")
             checkruns = resp.json()
             for cr in checkruns["check_runs"]:
@@ -126,18 +134,27 @@ class GHStackChecks:
         # If the comment was not left by the owner, it's only allowed for owners
         if actor != pr_owner:
             # Get the user permissions on the repo
-            resp = self.gh.get(f"https://api.github.com/repos/{self.REPO}/collaborators/{actor}/permission")
-            self.must(resp.ok, f"User {actor} must be a maintainer {self.REPO} to rebase someone else's PR")
+            resp = self.gh.get(
+                f"https://api.github.com/repos/{self.REPO}/collaborators/{actor}/permission"
+            )
+            self.must(
+                resp.ok,
+                f"User {actor} must be a maintainer {self.REPO} to rebase someone else's PR",
+            )
             permissions = resp.json()
 
             # Check if the actor is an OWNER (permission "write" or "admin")
             # Reference: https://docs.github.com/en/rest/collaborators/collaborators?apiVersion=2022-11-28#check-if-a-user-is-a-repository-collaborator
-            self.must(permissions["permission"] in ["write", "admin"], f"User {actor} must be a maintainer {self.REPO} to rebase someone else's PR")
+            self.must(
+                permissions["permission"] in ["write", "admin"],
+                f"User {actor} must be a maintainer {self.REPO} to rebase someone else's PR",
+            )
 
         # Attempt to rebase, fail in case of merge conflicts
         print(":: Attempting a rebase on main...")
         self.must(os.system("git rebase origin/main") == 0, "Can't rebase on main")
         print(":: All PRs are ready to be rebased!")
+
 
 def main(check):
     # Setup the wrapper class
@@ -152,8 +169,8 @@ def main(check):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='GHStack Permission Checks')
-    parser.add_argument('check', choices=['land', 'rebase'])
+    parser = argparse.ArgumentParser(description="GHStack Permission Checks")
+    parser.add_argument("check", choices=["land", "rebase"])
     args = parser.parse_args()
 
     main(args.check)
