@@ -17,13 +17,13 @@ jobs:
         EOF
     - name: Show Github Event Path Json
       run: 'cat "$GITHUB_EVENT_PATH" || true'
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         token: ${{ secrets.LAND_TOKEN }}
         fetch-depth: '0'
     - uses: actions/setup-python@v4
       with:
-        python-version: 3.9
+        python-version: 3.10
     - name: Check PR can be rebased
       run: |
         pip install requests ghstack
@@ -46,11 +46,8 @@ jobs:
         remote_name = origin
         EOF
 
-        # Rebase the stack
-        git rebase origin/main
-
-        # Update the PRs
-        ghstack --version
+        # The git repo is ready and rebased (ghstack-perm-check.py)
+        # Only submit is left
         ghstack submit
       env:
         GITHUB_TOKEN: ${{ secrets.LAND_TOKEN }}
