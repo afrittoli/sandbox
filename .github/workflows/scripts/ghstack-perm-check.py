@@ -151,7 +151,7 @@ class GHStackChecks:
             )
 
         # Checkout the "orig" branch (gh/username/1/orig) to rebase
-        self.must(os.system(f"git checkout -b to-be-rebased {self.orig_ref}") == 0, f"Can't fetch {self.orig_ref}")
+        self.must(os.system(f"git checkout -b to-be-rebased origin/{self.orig_ref}") == 0, f"Can't fetch {self.orig_ref}")
 
         # Attempt to rebase, fail in case of merge conflicts
         print(":: Attempting a rebase on main...")
