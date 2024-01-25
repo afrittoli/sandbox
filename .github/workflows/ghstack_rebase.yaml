@@ -48,9 +48,9 @@ jobs:
 
         # Checkout the */orig committer branch for rebase 
         # See https://github.com/ezyang/ghstack?tab=readme-ov-file#structure-of-submitted-pull-requests
-        HEAD_REF="$(echo '${{ toJson(github) }}' | jq .event.client_payload.pull_request.head.ref)"
-        ORIG_REF="$(printf $HEAD_REF | sed 's,/head$,/orig,g')"
-        git checkout -b "orig/${ORIG_REF}"
+        HEAD_REF=$(echo '${{ toJson(github) }}' | jq .event.client_payload.pull_request.head.ref)
+        ORIG_REF=$(printf "$HEAD_REF" | sed 's,/head$,/orig,g')
+        git checkout -b rebase-branch "orig/${ORIG_REF}"
 
         # Do the actual rebase. Git rebase will exit with 1 in case or merge conflicts
         git rebase origin/main
