@@ -10,3 +10,4 @@ Most tests have been cleaned up
 
 Rebase test3 #1
 Rebase test3 #2
+Rebase test3 #3
