@@ -46,7 +46,8 @@ jobs:
         remote_name = origin
         EOF
 
-        HEAD_REF=$(echo "${{ toJson(github) }}" | jq .event.client_payload.pull_request.head.ref)
+        jq --version
+        HEAD_REF=$(echo '${{ toJson(github) }}' | jq .event.client_payload.pull_request.head.ref)
         echo "$HEAD_REF"
 
         # The git repo is ready and rebased (ghstack-perm-check.py)
