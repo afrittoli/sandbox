@@ -9,3 +9,4 @@ and a second test on top
 Most tests have been cleaned up
 
 Rebase test3 #1
+Rebase test3 #2
