@@ -44,7 +44,8 @@ class GHStackChecks:
     def shared_checks(self):
         self.head_ref = self.PR["head"]["ref"]
         self.must(
-            self.head_ref and re.match(r"^gh/[A-Za-z0-9-]+/[0-9]+/head$", self.head_ref),
+            self.head_ref
+            and re.match(r"^gh/[A-Za-z0-9-]+/[0-9]+/head$", self.head_ref),
             "Not a ghstack PR",
         )
         self.orig_ref = self.head_ref.replace("/head", "/orig")
@@ -52,7 +53,8 @@ class GHStackChecks:
         self.must(os.system("git fetch origin main") == 0, "Can't fetch main")
         print(":: Fetching orig branch...")
         self.must(
-            os.system(f"git fetch origin {self.orig_ref}") == 0, "Can't fetch orig branch"
+            os.system(f"git fetch origin {self.orig_ref}") == 0,
+            "Can't fetch orig branch",
         )
 
         proc = subprocess.Popen(
