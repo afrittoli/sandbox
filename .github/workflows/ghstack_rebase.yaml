@@ -46,13 +46,17 @@ jobs:
         remote_name = origin
         EOF
 
-        jq --version
-        HEAD_REF=$(echo '${{ toJson(github) }}' | jq .event.client_payload.pull_request.head.ref)
-        echo "$HEAD_REF"
+        # Checkout the */orig committer branch for rebase 
+        # See https://github.com/ezyang/ghstack?tab=readme-ov-file#structure-of-submitted-pull-requests
+        HEAD_REF="$(echo '${{ toJson(github) }}' | jq .event.client_payload.pull_request.head.ref)"
+        ORIG_REF="$(printf $HEAD_REF | sed 's,/head$,/orig,g')"
+        git checkout -b "orig/${ORIG_REF}"
 
-        # The git repo is ready and rebased (ghstack-perm-check.py)
-        # Only submit is left
-        # ghstack submit
+        # Do the actual rebase. Git rebase will exit with 1 in case or merge conflicts
+        git rebase origin/main
+
+        # Submit the rebased stack to updated the PRs
+        ghstack submit
       env:
         GITHUB_TOKEN: ${{ secrets.LAND_TOKEN }}
 
