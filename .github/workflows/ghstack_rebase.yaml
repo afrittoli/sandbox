@@ -1,11 +1,11 @@
-name: Land ghstack PRs
+name: Rebase ghstack PRs
 on:
   repository_dispatch:
-    types: [land-command]
+    types: [rebase-command]
 
 jobs:
-  ghstack_land:
-    name: ghstack Land
+  ghstack_rebase:
+    name: ghstack Rebase
     runs-on: ubuntu-latest
     steps:
     - name: Show Environment Variables
@@ -24,18 +24,20 @@ jobs:
     - uses: actions/setup-python@v4
       with:
         python-version: 3.9
-    - name: Check Current CI Status
+    - name: Check PR can be rebased
       run: |
         pip install requests ghstack
-        .github/workflows/scripts/ghstack-perm-check.py land <<'EOF'
+        .github/workflows/scripts/ghstack-perm-check.py rebase <<'EOF'
         ${{ toJson(github) }}
         EOF
       env:
         GITHUB_TOKEN: ${{ secrets.LAND_TOKEN }}
-    - name: Land It!
+    - name: Rebase It!
       run: |
+        # Configure Git and GHStack
         git config --global user.email "andrea.frittoli@gmail.com"
         git config --global user.name "Andrea Frittoli"
+
         cat <<EOF > ~/.ghstackrc
         [ghstack]
         github_url = github.com
@@ -43,6 +45,18 @@ jobs:
         github_username = afrittoli
         remote_name = origin
         EOF
-        ghstack land "${{ github.event.client_payload.pull_request.html_url }}"
+
+        # Fetch the latest origin/main
+        git fetch origin/main
+
+        # Rebase the stack
+        # The ability to rebase is checked beforehand, but there is a slight chance that
+        # rebase might still fail here if origin/main moved since it was checked.
+        # When that happens the error will be in the action log and the rebase will be
+        # reported as failed.
+        git rebase origin/main
+
+        # Update the PRs
+        ghstack submit "${{ github.event.client_payload.pull_request.html_url }}"
       env:
         GITHUB_TOKEN: ${{ secrets.LAND_TOKEN }}
