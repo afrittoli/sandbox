@@ -42,17 +42,17 @@ class GHStackChecks:
             exit(1)
 
     def shared_checks(self):
-        head_ref = self.PR["head"]["ref"]
+        self.head_ref = self.PR["head"]["ref"]
         self.must(
-            head_ref and re.match(r"^gh/[A-Za-z0-9-]+/[0-9]+/head$", head_ref),
+            self.head_ref and re.match(r"^gh/[A-Za-z0-9-]+/[0-9]+/head$", self.head_ref),
             "Not a ghstack PR",
         )
-        orig_ref = head_ref.replace("/head", "/orig")
+        self.orig_ref = self.head_ref.replace("/head", "/orig")
         print(":: Fetching newest main...")
         self.must(os.system("git fetch origin main") == 0, "Can't fetch main")
         print(":: Fetching orig branch...")
         self.must(
-            os.system(f"git fetch origin {orig_ref}") == 0, "Can't fetch orig branch"
+            os.system(f"git fetch origin {self.orig_ref}") == 0, "Can't fetch orig branch"
         )
 
         proc = subprocess.Popen(
@@ -150,9 +150,6 @@ class GHStackChecks:
                 f"User {actor} must be a maintainer {self.REPO} to rebase someone else's PR",
             )
 
-        # Attempt to rebase, fail in case of merge conflicts
-        print(":: Attempting a rebase on main...")
-        self.must(os.system("git rebase origin/main") == 0, "Can't rebase on main")
         print(":: All PRs are ready to be rebased!")
 
 
