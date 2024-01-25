@@ -46,9 +46,11 @@ jobs:
         remote_name = origin
         EOF
 
+        echo ${{ toJson(github) }} | jq .event.client_payload.pull_request.head.ref
+
         # The git repo is ready and rebased (ghstack-perm-check.py)
         # Only submit is left
-        ghstack submit
+        # ghstack submit
       env:
         GITHUB_TOKEN: ${{ secrets.LAND_TOKEN }}
 
