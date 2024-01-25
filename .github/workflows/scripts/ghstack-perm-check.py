@@ -74,9 +74,9 @@ class GHStackChecks:
         )
         return pr_numbers
 
-    def land(self, pr_numbers):
+    def land(self):
         # Enforce requirements for every PR in the stack
-        for n in pr_numbers:
+        for n in self.pr_numbers:
             # Checking Approvals
             print(f":: Checking PR status #{n}... ", end="")
             resp = self.gh.get(f"https://api.github.com/repos/{self.REPO}/pulls/{n}")
@@ -123,7 +123,7 @@ class GHStackChecks:
 
         print(":: All PRs are ready to be landed!")
 
-    def rebase(self, pr_numbers):
+    def rebase(self):
         # Check if the PR owner matches the actor
         actor = self.event["event"]["client_payload"]["github"]["actor"]
         self.must(actor, "Event actor not found!")
@@ -144,7 +144,7 @@ class GHStackChecks:
             permissions = resp.json()
 
             # Check if the actor is an OWNER (permission "write" or "admin")
-            # Reference: https://docs.github.com/en/rest/collaborators/collaborators?apiVersion=2022-11-28#check-if-a-user-is-a-repository-collaborator
+            # Reference: https://docs.github.com/en/rest/collaborators/collaborators?apiVersion=2022-11-28#check-if-a-user-is-a-repository-collaborator  # noqa: E501
             self.must(
                 permissions["permission"] in ["write", "admin"],
                 f"User {actor} must be a maintainer {self.REPO} to rebase someone else's PR",
