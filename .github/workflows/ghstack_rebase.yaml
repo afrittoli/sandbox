@@ -36,6 +36,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.LAND_TOKEN }}
     - name: Rebase It!
+      id: rebasePR
       run: |
         # Configure Git and GHStack
         git config --global user.email "andrea.frittoli@gmail.com"
@@ -83,12 +84,12 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.LAND_TOKEN }}
 
     - name: Create URL to the run output
-      if: ${{ failure() }}
+      if: ${{ failure() && steps.rebasePR.outcome == 'failure' }}
       id: vars
       run: echo "run-url=https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" >> $GITHUB_OUTPUT
 
     - name: Create comment
-      if: ${{ failure() }}
+      if: ${{ failure() && steps.rebasePR.outcome == 'failure' }}
       uses: peter-evans/create-or-update-comment@v2
       with:
         token: ${{ secrets.LAND_TOKEN }}
