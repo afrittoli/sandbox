@@ -73,6 +73,8 @@ jobs:
         git config --global user.name "Andrea Frittoli"
 
         echo "${IS_GHSTACK}"
+        echo "${PR_URL}"
+
         if [[ "${IS_GHSTACK}" == "true" ]]; then
           # Configure ghstack
           cat <<EOF > ~/.ghstackrc
