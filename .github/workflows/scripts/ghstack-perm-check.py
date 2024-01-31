@@ -43,7 +43,7 @@ def must(session, repo, pr, cond, msg):
 def is_ghstack(session, event):
     # Extract the PR from the event
     pr = event["event"]["client_payload"]["pull_request"]
-    must(session, event["repository"], 0, "No PR object found in the event")
+    must(session, event["repository"], 0, pr, "No PR object found in the event")
 
     # Check the head_ref
     head_ref = pr["head"]["ref"]
