@@ -76,7 +76,7 @@ class ChatOps:
         print(":: Fetching orig branch...")
         self.must(
             os.system(f"git fetch origin {self.pr_ref}") == 0,
-            "Can't fetch orig branch",
+            f"Can't fetch orig branch {self.pr_ref}",
         )
 
     def must(self, cond, msg):
