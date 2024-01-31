@@ -162,7 +162,7 @@ class ChatOps:
 
 class GHStack(ChatOps):
     def __init__(self, session, event):
-        super().__init__()
+        super().__init__(session, event)
         self.pr_numbers = self.ghstack_pr_numbers()
 
     def get_pr_ref(self):
