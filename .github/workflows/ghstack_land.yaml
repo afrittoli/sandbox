@@ -62,8 +62,6 @@ jobs:
         .github/workflows/scripts/ghstack-perm-check.py land <<'EOF'
         ${{ toJson(github) }}
         EOF
-
-        env
       env:
         GITHUB_TOKEN: ${{ secrets.LAND_TOKEN }}
     - name: Land It!
