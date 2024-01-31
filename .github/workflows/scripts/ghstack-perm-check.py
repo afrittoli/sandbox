@@ -203,7 +203,7 @@ class GHStack(ChatOps):
 
 class GitHub(ChatOps):
     def get_pr_ref(self):
-        return self.PR["head"]["ref"]
+        return f"pull/{self.NUMBER}/head"
 
     def must(self, cond, msg):
         must(self.gh, self.REPO, self.NUMBER, cond, msg)
