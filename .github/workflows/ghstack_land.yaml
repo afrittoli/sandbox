@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 # The land-command workflow runs ghstack land on the PR
 #
 # This workflow is triggered by leaving a "/land" comment on
@@ -29,7 +27,6 @@
 # When PRs are landed successfully, the horray emoji is added
 # When landing fails, a comment is added with a link to the logs
 
->>>>>>> 2661450 (Adapt land and rebase for GitHub workflow)
 name: Land ghstack PRs
 on:
   repository_dispatch:
