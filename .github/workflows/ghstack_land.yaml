@@ -72,8 +72,7 @@ jobs:
         git config --global user.email "andrea.frittoli@gmail.com"
         git config --global user.name "Andrea Frittoli"
 
-        echo "${IS_GHSTACK}"
-        if [[ "${IS_GHSTACK}" == "true" ]]; then
+        if [[ "${IS_GHSTACK}" == "True" ]]; then
           # Configure ghstack
           cat <<EOF > ~/.ghstackrc
           [ghstack]

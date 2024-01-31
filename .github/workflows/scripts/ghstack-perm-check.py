@@ -54,7 +54,7 @@ def is_ghstack(session, event):
         head_ref,
         "Not head ref found in the event",
     )
-    return re.match(r"^gh/[A-Za-z0-9-]+/[0-9]+/head$", head_ref)
+    return bool(re.match(r"^gh/[A-Za-z0-9-]+/[0-9]+/head$", head_ref))
 
 
 class ChatOps:
@@ -162,7 +162,7 @@ class ChatOps:
 
 class GHStack(ChatOps):
     def __init__(self, session, event):
-        super().__init__()
+        super().__init__(session, event)
         self.pr_numbers = self.ghstack_pr_numbers()
 
     def get_pr_ref(self):
