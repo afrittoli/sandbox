@@ -86,7 +86,8 @@ jobs:
           # Run the land command
           ghstack land "${PR_URL}"
         else
-          # Rebase merge through the GitHub API
+          # Rebase merge through the GitHub API, which ensures all
+          # branch protection requirements are satisfied
           # Commits are not squashed, it's up to the PR owner to squash commits
           gh pr merge --repo "${REPO}" --rebase "${PR_URL}"
         fi
