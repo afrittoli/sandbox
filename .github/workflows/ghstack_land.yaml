@@ -62,6 +62,8 @@ jobs:
         .github/workflows/scripts/ghstack-perm-check.py land <<'EOF'
         ${{ toJson(github) }}
         EOF
+
+        env
       env:
         GITHUB_TOKEN: ${{ secrets.LAND_TOKEN }}
     - name: Land It!
@@ -71,6 +73,8 @@ jobs:
         # TODO: update the bot e-mail once a correct e-mail is available
         git config --global user.email "andrea.frittoli@gmail.com"
         git config --global user.name "Andrea Frittoli"
+
+        env
 
         if [[ "${IS_GHSTACK}" == "true" ]]; then
           # Configure ghstack
