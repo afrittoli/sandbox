@@ -42,10 +42,7 @@ jobs:
         git config --global user.email "andrea.frittoli@gmail.com"
         git config --global user.name "Andrea Frittoli"
 
-        echo "${IS_GHSTACK}"
-        echo "${PR_URL}"
-
-        if [[ "${IS_GHSTACK}" == "true" ]]; then
+        if [[ "${IS_GHSTACK}" == "True" ]]; then
           # Configure ghstack
           cat <<EOF > ~/.ghstackrc
           [ghstack]
@@ -68,7 +65,7 @@ jobs:
         # The rebase command is the same for GHStack and GitHub PRs
         git rebase origin/main
 
-        if [[ "${IS_GHSTACK}" == "true" ]]; then
+        if [[ "${IS_GHSTACK}" == "True" ]]; then
           # Submit the rebased stack to updated the PRs
           ghstack submit
         else
