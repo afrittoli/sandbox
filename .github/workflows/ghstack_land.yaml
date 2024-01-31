@@ -72,8 +72,7 @@ jobs:
         git config --global user.email "andrea.frittoli@gmail.com"
         git config --global user.name "Andrea Frittoli"
 
-        env
-
+        echo "${IS_GHSTACK}"
         if [[ "${IS_GHSTACK}" == "true" ]]; then
           # Configure ghstack
           cat <<EOF > ~/.ghstackrc
@@ -89,7 +88,7 @@ jobs:
         else
           # Rebase merge through the GitHub API
           # Commits are not squashed, it's up to the PR owner to squash commits
-          gh pr merge --repo "${REPO}" --rebase
+          gh pr merge --repo "${REPO}" --rebase "${PR_URL}"
         fi
       env:
         GITHUB_TOKEN: ${{ secrets.LAND_TOKEN }}
