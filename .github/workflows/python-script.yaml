@@ -186,5 +186,6 @@ jobs:
       - name: Ensure script is in sync
         run: |
           echo ${{ github.workflow_ref }}
-          echo
-          echo ${{ github }}
+
+          ls -al *
+          ls ${{ github.workflow_ref }}
