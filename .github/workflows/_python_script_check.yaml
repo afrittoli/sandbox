@@ -5,12 +5,12 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - .github/workflows/_runner_determinator.yaml
+      - .github/workflows/_runner-determinator.yaml
       - .github/workflows/_python-script_check.yaml
       - .github/workflows/scripts/runner_determinator.py
 
 jobs:
-  python-runner-determinator:
+  python-script-check:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,13 +21,15 @@ jobs:
 
       - name: Extract the script from runner_determinator
         run: |
-            # Parse the job file, extract the script and run it
+            # Parse the job file, extract the script and run it, up to the final EOF,
             # to generate the python file in the local folder
-            yq '.jobs.runner-determinator.steps[] | select(.name == "Hardcode runner-determinator script") | .run' \
-                .github/workflows/_runner-determinator.yml | bash
+            yq '.jobs.runner-determinator.steps[] | select(.id == "script") | .run' \
+                .github/workflows/_runner-determinator.yaml | sed '/^EOF$/q' | bash
 
+            set +e
             DIFF=$(diff runner_determinator.py .github/workflows/scripts/runner_determinator.py)
             IS_DIFF=$?
+            set -e
             if [ $IS_DIFF -eq 0 ]; then
                 echo "Scripts are in sync! ^_^";
             else
