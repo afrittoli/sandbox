@@ -188,8 +188,8 @@ jobs:
               main()
           EOF
 
-          SCRIPT=$(cat runner_determinator.py)
-          echo "script=$SCRIPT" >> "$GITHUB_OUTPUT"
+          SCRIPT="$(cat runner_determinator.py)"
+          echo "script=${SCRIPT}" >> "$GITHUB_OUTPUT"
 
       - name: Ensure script is in sync
         run: |
