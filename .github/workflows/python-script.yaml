@@ -2,17 +2,10 @@ name: python-script
 
 on:
   workflow_dispatch:
-  workflow_call:
-    outputs:
-      script:
-        description: Type python script
-        value: ${{ jobs.python-runner-determinator.outputs.script }}
 
 jobs:
   python-runner-determinator:
     runs-on: ubuntu-latest
-    outputs:
-      script: ${{ steps.script.outputs.script }}
 
     steps:
       - name: Produce the Python sctipy
@@ -193,4 +186,6 @@ jobs:
 
       - name: Ensure script is in sync
         run: |
-          echo ${{ steps.script.outputs.script }}
+          echo ${{ github.workflow_ref }}
+          echo
+          echo ${{ github }}
