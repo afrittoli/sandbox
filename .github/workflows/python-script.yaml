@@ -2,7 +2,8 @@ name: python-script
 
 on:
   workflow_dispatch:
-  pull:
+  pull_request:
+    branches: [main]
 
 jobs:
   python-runner-determinator:
