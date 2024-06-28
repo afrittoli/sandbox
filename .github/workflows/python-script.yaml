@@ -2,6 +2,7 @@ name: python-script
 
 on:
   workflow_dispatch:
+  pull:
 
 jobs:
   python-runner-determinator:
@@ -186,5 +187,5 @@ jobs:
       - name: Ensure script is in sync
         run: |
           echo ${{ github.workflow_ref }}
-          echo
-          echo ${{ github }}
+
+          ls -al
