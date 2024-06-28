@@ -1,24 +1,14 @@
 name: python-script
 
 on:
-  workflow_dispatch:
-  pull_request:
-    branches: [main]
-    paths:
-      - .github/workflows/python-script.yaml
-      - .github/workflows/scripts/script.py
+  workflow_call:
 
 jobs:
-  python-runner-determinator:
+  runner-determinator:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            .github
-            
-      - name: Produce the Python sctipy
+      - name: Produce the Python script
         id: script
         run: |
           cat <<EOF > runner_determinator.py
@@ -192,9 +182,3 @@ jobs:
           EOF
 
           cat runner_determinator.py
-
-      - name: Ensure script is in sync
-        run: |
-          echo ${{ github.workflow_ref }}
-
-          ls -al
