@@ -6,6 +6,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      storage-prefix:
+        description: 'S3 prefix for this platform (override for testing)'
+        required: false
+        default: 'platform1'
 
 permissions:
   id-token: write
@@ -16,5 +21,5 @@ jobs:
     uses: afrittoli/sandbox-shared/.github/workflows/shared-build.yml@main
     with:
       iam-role: arn:aws:iam::569569263630:role/oot-build-platform1
-      storage-prefix: platform1
+      storage-prefix: ${{ inputs.storage-prefix || 'platform1' }}
       bucket-name: afrittoli-rfc0055-poc
