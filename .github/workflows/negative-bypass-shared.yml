@@ -1,0 +1,38 @@
+# Negative test: attempt to assume the role and upload to S3 directly,
+# bypassing the shared-build reusable workflow.
+# Expected: succeeds today (no workflow enforcement), should fail after policy tightening.
+name: Negative - Bypass Shared Workflow
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  bypass:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print OIDC token claims (debug)
+        run: |
+          OIDC_TOKEN=$(curl -s -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com")
+          echo "--- sub claim ---"
+          echo "$OIDC_TOKEN" | jq -r '.value' | cut -d. -f2 | base64 -d 2>/dev/null | jq -r '.sub'
+          echo "--- job_workflow_ref claim ---"
+          echo "$OIDC_TOKEN" | jq -r '.value' | cut -d. -f2 | base64 -d 2>/dev/null | jq -r '.job_workflow_ref'
+
+      - name: Configure AWS credentials (direct, no shared workflow)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::569569263630:role/oot-build-platform1
+          aws-region: us-east-1
+          audience: sts.amazonaws.com
+
+      - name: Upload to S3 (bypass attempt)
+        run: |
+          echo "Bypass test - uploaded directly without shared workflow" > bypass-artifact.txt
+          aws s3 cp bypass-artifact.txt \
+            "s3://afrittoli-rfc0055-poc/platform1/bypass-test-${{ github.run_id }}.txt"
+          echo "SUCCESS: bypass upload worked (expected before policy tightening)"
