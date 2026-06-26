@@ -1,0 +1,28 @@
+# Negative test: attempt to assume platform2's role from sandbox.
+# Expected: denied — the trust policy only allows repo:afrittoli/sandbox-2:*
+name: Negative - Cross Role Assumption
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  cross-role:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Attempt to assume platform2 role
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::569569263630:role/oot-build-platform2
+          aws-region: us-east-1
+          audience: sts.amazonaws.com
+
+      - name: Upload to S3 (should not reach here)
+        run: |
+          echo "Cross-role test from sandbox" > cross-role-artifact.txt
+          aws s3 cp cross-role-artifact.txt \
+            "s3://afrittoli-rfc0055-poc/platform2/cross-role-test-${{ github.run_id }}.txt"
+          echo "FAIL: cross-role assumption should have been denied"
